@@ -3,6 +3,9 @@ import pathlib
 import vcf_reader
 
 
+CHOSEN_COLUMNS=['INDICE_TECH', 'TECNOLOGIA', 'CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER',
+                'GT', 'AF', 'NVF', 'VF', 'GQ', 'DP', 'AD', 'DPD', 'GD4']
+
 if __name__ == '__main__':
     results_folders = pathlib.Path('Output').iterdir()
 
@@ -25,6 +28,14 @@ if __name__ == '__main__':
         
         differences_df = pd.concat(df_list)
         differences_df.index.name = 'INDICE_TECH'
+
+        excel_columns = differences_df.columns.tolist()
+        new_columns = [col for col in CHOSEN_COLUMNS if col in excel_columns]
+        # new_columns = []
+        # for col in CHOSEN_COLUMNS:
+        #     if col in excel_columns:
+        #         new_columns.append(col)
+        differences_df = differences_df[new_columns]
 
         excel_path = result / f'{result.name}_differenze_vcf.xlsx'
         differences_df.to_excel(excel_path, index=True)

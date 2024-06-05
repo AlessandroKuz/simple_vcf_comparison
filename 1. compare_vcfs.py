@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess, os
+from pprint import pprint
 
 
 def list_files_and_folders(start_path='.', extension='.gz'):
@@ -80,7 +81,7 @@ def filter_brca_file_genes(file_path, verbose):
     except subprocess.CalledProcessError as e:
         print(f'Error filtering BRCA {file_path}: {e}')
 
-def filter_file_genes(file_path, verbose):
+def filter_hc_file_genes(file_path, verbose):
     try:
         temp_file_path = file_path.with_suffix('').as_posix()
         temp_file_path = f"{temp_file_path}_temp.vcf"
@@ -104,14 +105,17 @@ def filter_file_genes(file_path, verbose):
 
 def final_brca_filter(file_path, verbose):
     try:
-        temp_file_path = file_path.as_posix().split('.')[0]
+        temp_file_path = file_path.with_suffix('').with_suffix('').as_posix()
         temp_file_path = f"{temp_file_path}_temp.vcf"
-        brca_bed_file_path = Path('./bed_files/BRCA_genes.bed').absolute()
+        brca_bed_file_path = Path('./bed_files/brca_hg19_uscs.bed')
 
         os.system(f'bcftools view -R {brca_bed_file_path} {file_path} > {temp_file_path}')
 
         os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
-        os.system(f'rm {temp_file_path}')
+        os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
+        compress_file(file_path.with_suffix(''), verbose)
+        index_file(file_path, verbose)
+
         if verbose:
             print(f'Filtered: {file_path}')
     except subprocess.CalledProcessError as e:
@@ -119,39 +123,35 @@ def final_brca_filter(file_path, verbose):
 
 def final_hc_filter(file_path, verbose):
     try:
-        temp_file_path = file_path.with_suffix('').as_posix()
+        temp_file_path = file_path.with_suffix('').with_suffix('').as_posix()
         temp_file_path = f"{temp_file_path}_temp.vcf"
-        hc_bed_file_path = Path('./bed_files/NANOPORE_HC_BED_hg19.bed').absolute()
+        hc_bed_file_path = Path('./bed_files/hc_hg19_uscs.bed')
 
         os.system(f'bcftools view -R {hc_bed_file_path} {file_path} > {temp_file_path}')
 
         os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
-        os.system(f'rm {temp_file_path}')
+        os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
+        compress_file(file_path.with_suffix(''), verbose)
+        index_file(file_path, verbose)
+
         if verbose:
             print(f'Filtered: {file_path}')
     except subprocess.CalledProcessError as e:
         print(f'Error filtering {file_path}: {e}')
 
-def get_matching_files(folder1, folder2, verbose):
-    vcf_files = [file_path for file_path in folder1.rglob("*.vcf") if 'temp' in file_path.as_posix()]
+def get_matching_files(folder1, folder2):
+    vcf_files = folder1.rglob("*.vcf.gz")
 
+    folder2_type = folder2.name  # ILLUMINA or NANOPORE depending of what was passed as folder2
     corresponding_paths = dict()
     no_matched_files = []
-    for vcf_file in vcf_files:
-        try:
-            corresponding_paths[vcf_file] = next(folder2.rglob(vcf_file.name))
-        except StopIteration:
-            no_matched_files.append(vcf_file)
 
-    if verbose:
-        if len(no_matched_files) > 0:
-            print('='*100)
-            print('Missing matching file for the following files:')
-            print('='*100)
-            for file in no_matched_files:
-                print(f"\t{file.as_posix()}")
+    for vcf_file in vcf_files:
+        equivalent_folder2_path = vcf_file.parents[1] / folder2_type / vcf_file.name
+        if equivalent_folder2_path.exists():
+            corresponding_paths[vcf_file] = equivalent_folder2_path
         else:
-            print('All files found a match!')
+            no_matched_files.append(vcf_file)
 
     return corresponding_paths, no_matched_files
 
@@ -162,7 +162,8 @@ def compare_files(comparison_tuples, output_dir, verbose):
             output_file_dir = output_dir / file_comparison_name
             output_file_dir.mkdir(exist_ok=True, parents=True)
             # bcftools stats renamed_nanopore_filtrato.vcf.gz illumina_filtrato.vcf.gz > results.vchk
-            os.system(f'bcftools stats -c all {file_tuple[0]} {file_tuple[1]} > {output_file_dir / f"{output_file_dir.name}_comparison_stats.vchk"}')
+
+            os.system(f'bcftools stats -c all {file_tuple[0]} {file_tuple[1]} > {output_file_dir / f"{output_file_dir.name}_comparison_stats.txt"}')
             # vcf-compare renamed_nanopore_filtrato.vcf.gz illumina_filtrato.vcf.gz > compare.txt
             os.system(f'vcf-compare {file_tuple[0]} {file_tuple[1]} > {output_file_dir / f"{output_file_dir.name}_vcf_comparison.txt"}')
             # bcftools isec  -p isec_output -Oz illumina_filtrato.vcf.gz renamed_nanopore_filtrato.vcf.gz
@@ -174,42 +175,45 @@ def compare_files(comparison_tuples, output_dir, verbose):
 
 def main(nanopore_folder_name, illumina_folder_name, 
          start_path = Path('.').absolute(), output_folder = Path('./Output').absolute(), 
-         skip_confirmation = False, verbose = True):
+         verbose = True):
     if not start_path.exists():
         raise ValueError('Invalid path provided')
 
-    if not skip_confirmation:
-        ask = input(f'Would you like to search in the folder {start_path}? (y/n): ')
-        if ask.lower().strip() not in ['y', '']:
-            exit(0)
+    nanopore_path = Path(start_path / nanopore_folder_name)
+    illumina_path = Path(start_path / illumina_folder_name)
 
-    gz_file_generator = list_files_and_folders(start_path=start_path, extension='.gz')
-    
+    gz_file_generator_illumina = list_files_and_folders(start_path=illumina_path, extension='.gz')
+    gz_file_generator_nanopore = list_files_and_folders(start_path=nanopore_path, extension='.gz')
+    gz_files = list(gz_file_generator_illumina) + list(gz_file_generator_nanopore)
+    gz_files.sort()
 
-    for file_path in gz_file_generator:
+    for file_path in gz_files:
         recompress_file(file_path, verbose)
         index_file(file_path, verbose)
         str_upper_file_path = file_path.as_posix().upper()
         if ('BRCA' in str_upper_file_path or ('HC' in str_upper_file_path and nanopore_folder_name.upper() in str_upper_file_path)) and not ('ILLUMINA/BRCA_SOPHIA' in str_upper_file_path):
             normalize_file_chromosome_names(file_path, verbose)
-            annotate_file(file_path, verbose)
-        else:
-            annotate_file(file_path, verbose)
+        index_file(file_path, verbose)
+        # annotate_file(file_path, verbose)
 
-    temp_vcf_files = list(file_path for file_path in list_files_and_folders(extension='.vcf') if 'temp' in file_path.as_posix())
+    temp_vcf_files_illumina = list_files_and_folders(start_path=illumina_path, extension='.vcf.gz')
+    temp_vcf_files_nanopore = list_files_and_folders(start_path=nanopore_path, extension='.vcf.gz')
+    temp_vcf_files = list(temp_vcf_files_illumina) + list(temp_vcf_files_nanopore)
+    temp_vcf_files.sort()
+
     for file_path in temp_vcf_files:
-        # filter_brca_file_genes(file_path, verbose)
+        # if 'BRCA' in file_path.as_posix().upper():
+        #     filter_brca_file_genes(file_path, verbose)
+        # else:
+        #     filter_hc_file_genes(file_path, verbose)
+
+        # compress_file(file_path, verbose)
+        # file_path = Path(f"{file_path.as_posix()}.gz")
+        # index_file(file_path, verbose)
+
         if 'BRCA' in file_path.as_posix().upper():
-            filter_brca_file_genes(file_path, verbose)
-            compress_file(file_path, verbose)
-            file_path = Path(f"{file_path.as_posix()}.gz")
-            index_file(file_path, verbose)
             final_brca_filter(file_path, verbose)
         else:
-            filter_file_genes(file_path, verbose)
-            compress_file(file_path, verbose)
-            file_path = Path(f"{file_path.as_posix()}.gz")
-            index_file(file_path, verbose)
             final_hc_filter(file_path, verbose)
     
     if verbose:
@@ -218,23 +222,19 @@ def main(nanopore_folder_name, illumina_folder_name,
         print('='*50)
 
     # Getting matching names for each .vcf file
-    nanopore_path = Path(start_path / nanopore_folder_name)
-    illumina_path = Path(start_path / illumina_folder_name)
-    matches_dict, missing_files = get_matching_files(nanopore_path, illumina_path, verbose)
+    matches_dict, missing_files = get_matching_files(nanopore_path, illumina_path)
 
+    if len(matches_dict) == 0: 
+        raise FileExistsError('No file to match!')
     if len(missing_files) > 0:
-        raise FileNotFoundError('Missing files! not all of the files have a match!')
-    
-    for file_path in temp_vcf_files:
-        compress_file(file_path, verbose)
-        file_path = f"{file_path.as_posix()}.gz"
-        index_file(file_path, verbose)
+        raise FileNotFoundError('Missing files! Not all of the files have a match!')
 
-    comparison_tuples = [(file1.with_name(file1.name + '.gz'), file2.with_name(file2.name + '.gz')) for file1, file2 in matches_dict.items()]
+    comparison_tuples = [(file1, file2) for file1, file2 in matches_dict.items()]
+    comparison_tuples.sort(key=lambda x: x[0])
     compare_files(comparison_tuples, output_folder, verbose)
 
 
 if __name__ == '__main__':
     main(nanopore_folder_name='NANOPORE', illumina_folder_name='ILLUMINA', 
          start_path=Path('.').absolute(), output_folder=Path('./Output').absolute(), 
-         skip_confirmation=True, verbose=True)
+         verbose=True)
