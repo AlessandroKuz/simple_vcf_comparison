@@ -1,0 +1,226 @@
+#Split in new
+chr1	120724177	120724250	NOTCH2NLR
+#Split in new
+chr1	120840361	120840593	NBPF26
+#Partially deleted in new
+chr1	121093207	121093250	RP11-439A17.9
+#Split in new
+chr1	121097168	121097959	RP11-439A17.10
+#Split in new
+chr1	121098080	121098157	RP11-439A17.10
+#Split in new
+chr1	121185317	121185469	SRGAP2C
+#Split in new
+chr1	145291525	145291743	NBPF20
+#Split in new
+chr1	148679461	148679945	NBPF14
+#Partially deleted in new
+chr1	149390787	149390922	CH17-159N18.5
+#Split in new
+chr1	155188162	155188987	MUC1
+#Split in new
+chr1	155189229	155190202	MUC1
+#Split in new
+chr1	155190497	155190805	MUC1
+#Split in new
+chr1	155190954	155191337	MUC1
+#Split in new
+chr1	155191458	155192310	MUC1
+#Deleted in new
+chr1	248745141	248745279	RP11-438F14.11
+#Deleted in new
+chr1	248748288	248748453	RP11-438F14.11
+#Deleted in new
+chr1	248750523	248750643	LYPD8
+#Deleted in new
+chr1	248751029	248751081	LYPD8
+#Split in new
+chr10	46836795	46837162	NA
+#Split in new
+chr10	46837466	46837737	NA
+#Split in new
+chr10	46837812	46837947	NA
+#Partially deleted in new
+chr10	49942194	49942300	TIMM23B
+#Partially deleted in new
+chr10	49943234	49943358	TIMM23B
+#Partially deleted in new
+chr10	49945031	49945090	TIMM23B
+#Deleted in new
+chr10	131901148	131901155	PPP2R2D
+#Deleted in new
+chr10	131901237	131901330	PPP2R2D
+#Deleted in new
+chr11	1098364	1098372	MUC2
+#Split in new
+chr11	1098373	1099760	MUC2
+#Deleted in new
+chr11	1174495	1174622	MUC5AC
+#Deleted in new
+chr11	1174881	1175137	MUC5AC
+#Deleted in new
+chr11	1175217	1175270	MUC5AC
+#Deleted in new
+chr11	1176150	1176251	MUC5AC
+#Deleted in new
+chr11	1176513	1176665	MUC5AC
+#Deleted in new
+chr11	1176927	1177066	MUC5AC
+#Deleted in new
+chr11	1177230	1177344	MUC5AC
+#Deleted in new
+chr11	1177453	1177633	MUC5AC
+#Deleted in new
+chr11	1178443	1178683	MUC5AC
+#Deleted in new
+chr11	1179091	1179248	MUC5AC
+#Deleted in new
+chr11	1180021	1180150	MUC5AC
+#Deleted in new
+chr11	1180353	1180516	MUC5AC
+#Deleted in new
+chr11	1181138	1181182	MUC5AC
+#Deleted in new
+chr11	1181270	1181459	MUC5AC
+#Split in new
+chr11	1182154	1192525	MUC5AC
+#Deleted in new
+chr13	113954665	113956429	C13orf46
+#Deleted in new
+chr13	113956772	113956839	C13orf46
+#Deleted in new
+chr13	113970174	113970222	C13orf46
+#Deleted in new
+chr16	8589212	8589293	TMEM114
+#Deleted in new
+chr16	8589618	8589838	TMEM114
+#Deleted in new
+chr17	147440	147577	DOC2B
+#Partially deleted in new
+chr17	21699933	21700183	KCNJ18
+#Deleted in new
+chr17	21773753	21773837	ABC13-47656900H15.1
+#Deleted in new
+chr17	21774443	21774489	ABC13-47656900H15.1
+#Partially deleted in new
+chr17	36430477	36430630	TBC1D3F
+#Split in new
+chr17	36450145	36450642	TBC1D3J
+#Partially deleted in new
+chr17	36451623	36451776	TBC1D3J
+#Partially deleted in new
+chr17	36453159	36453254	TBC1D3J
+#Partially deleted in new
+chr17	36454631	36454680	TBC1D3J
+#Partially deleted in new
+chr17	74893351	74893595	FADS6
+#Split in new
+chr18	46968694	46969912	ELOA3CP
+#Split in new
+chr18	47022286	47023927	KATNAL2
+#Partially deleted in new
+chr19	39905730	39906323	FCGBP
+#Split in new
+chr19	54220527	54220830	RPS9
+#Split in new
+chr19	54221082	54221379	RPS9
+#Partially deleted in new
+chr19	54241575	54241878	RPS9
+#Partially deleted in new
+chr19	54242025	54242310	RPS9
+#Partially deleted in new
+chr19	54242717	54242751	RPS9
+#Partially deleted in new
+chr19	54250785	54251169	LILRB5
+#Partially deleted in new
+chr2	91442055	91442286	NA
+#Split in new
+chr2	241819125	241820274	LOC107986004
+#Partially deleted in new
+chr21	5033407	5034096	CH507-9B2.1
+#Split in new
+chr22	15690077	15690709	POTEH
+#Deleted in new
+chr22	17369783	17369909	CECR2
+#Deleted in new
+chr22	42130546	42130547	NDUFA6-DT
+#Deleted in new
+chr22	42130558	42130560	NDUFA6-DT
+#Deleted in new
+chr22	42130564	42130565	NDUFA6-DT
+#Deleted in new
+chr22	42130568	42130569	NDUFA6-DT
+#Deleted in new
+chr22	42130570	42130572	NDUFA6-DT
+#Deleted in new
+chr22	42130577	42130578	NDUFA6-DT
+#Partially deleted in new
+chr22	42132025	42132030	NDUFA6-DT
+#Deleted in new
+chr6	106973669	106973885	CD24
+#Deleted in new
+chr6	106975133	106975327	CD24
+#Partially deleted in new
+chr7	74964985	74965098	CASTOR2
+#Deleted in new
+chr7	100964694	100964843	MUC3A
+#Deleted in new
+chr7	100965281	100965347	MUC3A
+#Deleted in new
+chr7	100965703	100965866	MUC3A
+#Deleted in new
+chr7	100966385	100966559	MUC3A
+#Deleted in new
+chr7	100966651	100966743	MUC3A
+#Deleted in new
+chr7	100966898	100966951	MUC3A
+#Deleted in new
+chr7	100967120	100967162	MUC3A
+#Deleted in new
+chr7	142793120	142793141	TRBC1
+#Split in new
+chr8	143857986	143873298	EPPK1
+#Split in new
+chr9	41953182	41953386	CNTNAP3B
+#Split in new
+chr9	61096835	61097039	RP11-101E5.7
+#Partially deleted in new
+chr9	66151724	66151809	ANKRD20A3P
+#Split in new
+chr9	67859426	67859629	ANKRD20A1
+#Split in new
+chr9	67860470	67860555	ANKRD20A1
+#Split in new
+chr9	67862940	67863055	ANKRD20A1
+#Split in new
+chr9	67863217	67863391	ANKRD20A1
+#Deleted in new
+chr9	136286517	136286695	CCDC187
+#Deleted in new
+chr9	136289958	136290053	CCDC187
+#Deleted in new
+chr9	136290485	136291645	CCDC187
+#Deleted in new
+chr9	136292160	136292295	CCDC187
+#Deleted in new
+chr9	136297713	136297821	CCDC187
+#Deleted in new
+chrX	314889	315020	GTPBP6
+#Deleted in new
+chrX	315228	315299	GTPBP6
+#Deleted in new
+chrX	316913	317051	GTPBP6
+#Deleted in new
+chrX	318438	318787	GTPBP6
+#Partially deleted in new
+chrX	49304859	49304940	GAGE10
+#Deleted in new
+chrX	77447674	77447948	FGF16
+#Deleted in new
+chrY	314889	315020	GTPBP6
+#Deleted in new
+chrY	315228	315299	GTPBP6
+#Deleted in new
+chrY	316913	317051	GTPBP6
+#Deleted in new
+chrY	318438	318787	GTPBP6
