@@ -54,7 +54,7 @@ def final_brca_filter(file_path, verbose):
 
         os.system(f'bcftools view -R {brca_bed_file_path} {file_path} > {temp_file_path}')
 
-        os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
+        os.system(f'cat {temp_file_path} > {file_path.with_suffix("")}')
         os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
         compress_file(file_path.with_suffix(''), verbose)
         index_file(file_path, verbose)
@@ -72,7 +72,7 @@ def final_hc_filter(file_path, verbose):
 
         os.system(f'bcftools view -R {hc_bed_file_path} {file_path} > {temp_file_path}')
 
-        os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
+        os.system(f'cat {temp_file_path} > {file_path.with_suffix("")}')
         os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
         compress_file(file_path.with_suffix(''), verbose)
         index_file(file_path, verbose)
