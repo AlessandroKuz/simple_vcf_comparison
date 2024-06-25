@@ -1,7 +1,8 @@
 from pathlib import Path
 
+
 def write_guide(guide_path):
-    guide = f"""{'='*100}\n{'\t'*12}Guida\n{'='*100}\n\n
+    guide = f"""{'='*100}\n{'\t'*6}Guida\n{'='*100}\n\n
 Per ogni combinazione NANOPORE-ILLUMINA è presente una cartella con più file:\n
 \t- FILE_vcf_comparison.txt  : (es: BRCA_118_21_vcf_comparison)
 \t\t Contiene informazioni in formato testuale del diagramma di Venn dei record (quanti casi 
@@ -15,7 +16,7 @@ Per ogni combinazione NANOPORE-ILLUMINA è presente una cartella con più file:\
 \t\t Contiene i singoli vcf contenti le informazioni dei record presenti solo in NANOPORE, solo in ILLUMINA e quelli in comune\n
 
 
-{'-'*100}\n{'\t'*12}Legenda\n{'-'*100}\n\n
+{'-'*100}\n{'\t'*6}Legenda\n{'-'*100}\n\n
 TECNOLOGIA: Tecnologia impiegata nel sequenziamento
 INDICE_TECH: Indice per i record di una determinata tecnologia
 CHROM: -

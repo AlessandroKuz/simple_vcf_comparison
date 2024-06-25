@@ -8,6 +8,7 @@ CHOSEN_COLUMNS = ['INDICE_TECH', 'CAMPIONE', 'TECNOLOGIA', 'CHROM', 'POS', 'ID',
                   'DPD', 'DP4', 'PL', 'avsnp151', 'CLNALLELEID', 'CLNDN', 'CLNDISDB',
                   'CLNREVSTAT', 'CLNSIG']
 
+
 if __name__ == '__main__':
     results_folders = pathlib.Path('./Output').iterdir()
 

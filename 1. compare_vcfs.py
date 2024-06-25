@@ -29,7 +29,6 @@ def recompress_file(file_path, verbose):
 
 def index_file(file_path, verbose):
     try:
-        # bcftools index file_path
         subprocess.run(['bcftools', 'index', '-f', file_path], check=True)
         if verbose:
             print(f'Indexed File: {file_path}')
@@ -38,8 +37,7 @@ def index_file(file_path, verbose):
 
 def normalize_file_chromosome_names(file_path, verbose):
     try:
-        # bcftools annotate --rename-chrs chromosome_nanopore.txt nanopore.vcf.gz -Oz -o renamed_nanopore.vcf.gz
-        subprocess.run(['bcftools', 'annotate', '--rename-chrs', './maps/chromosome_mappings.txt', file_path.as_posix(), '-Oz', '-o', file_path.as_posix()], check=True)
+        subprocess.run(['bcftools', 'annotate', '--rename-chrs', './maps/complete_chromosome_mappings.txt', file_path.as_posix(), '-Oz', '-o', file_path.as_posix()], check=True)
         if verbose:
             print(f'Normalized CHROM: {file_path}')
     except subprocess.CalledProcessError as e:
@@ -49,12 +47,11 @@ def final_brca_filter(file_path, verbose):
     try:
         temp_file_path = file_path.with_suffix('').with_suffix('').as_posix()
         temp_file_path = f"{temp_file_path}_temp.vcf"
-        # brca_bed_file_path = Path('./bed_files/brca_devyser_nanopore_hg19_chrless.bed')
-        brca_bed_file_path = Path('./bed_files/Devyser_BRCA_hg19_chrless.bed')
+        brca_bed_file_path = Path('./bed_files/nanopore_devyser_hg19.bed')
 
         os.system(f'bcftools view -R {brca_bed_file_path} {file_path} > {temp_file_path}')
 
-        os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
+        os.system(f'cat {temp_file_path} > {file_path.with_suffix("")}')
         os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
         compress_file(file_path.with_suffix(''), verbose)
         index_file(file_path, verbose)
@@ -68,11 +65,11 @@ def final_hc_filter(file_path, verbose):
     try:
         temp_file_path = file_path.with_suffix('').with_suffix('').as_posix()
         temp_file_path = f"{temp_file_path}_temp.vcf"
-        hc_bed_file_path = Path('./bed_files/hc_sophia_nanopore_hg19.bed')
+        hc_bed_file_path = Path('./bed_files/nanopore_hc_hg19.bed')
 
         os.system(f'bcftools view -R {hc_bed_file_path} {file_path} > {temp_file_path}')
 
-        os.system(f'cat {temp_file_path} > {file_path.with_suffix('')}')
+        os.system(f'cat {temp_file_path} > {file_path.with_suffix("")}')
         os.system(f'rm {temp_file_path} {file_path} {file_path.as_posix() + ".csi"}')
         compress_file(file_path.with_suffix(''), verbose)
         index_file(file_path, verbose)
@@ -104,11 +101,8 @@ def compare_files(comparison_tuples, output_dir, verbose):
             file_comparison_name = file_tuple[0].name.split('.')[0]
             output_file_dir = output_dir / file_comparison_name
             output_file_dir.mkdir(exist_ok=True, parents=True)
-            # bcftools stats renamed_nanopore_filtrato.vcf.gz illumina_filtrato.vcf.gz > results.vchk
             os.system(f'bcftools stats -c all {file_tuple[0]} {file_tuple[1]} > {output_file_dir / f"{output_file_dir.name}_comparison_stats.txt"}')
-            # vcf-compare renamed_nanopore_filtrato.vcf.gz illumina_filtrato.vcf.gz > compare.txt
             os.system(f'vcf-compare {file_tuple[0]} {file_tuple[1]} > {output_file_dir / f"{output_file_dir.name}_vcf_comparison.txt"}')
-            # bcftools isec  -p isec_output -Oz illumina_filtrato.vcf.gz renamed_nanopore_filtrato.vcf.gz
             os.system(f'bcftools isec -c all -p {output_file_dir / f"{output_file_dir.name}_raw_and_intersection_vcfs"} -Oz {file_tuple[0]} {file_tuple[1]}')
             if verbose:
                 print(f'Comparison done for: {file_comparison_name}')
@@ -136,7 +130,7 @@ def main(nanopore_folder_name, illumina_folder_name,
         recompress_file(file_path, verbose)
         index_file(file_path, verbose)
         str_upper_file_path = file_path.as_posix().upper()
-        if ('BRCA' in str_upper_file_path or ('HC' in str_upper_file_path and nanopore_folder_name.upper() in str_upper_file_path)) and not ('ILLUMINA/BRCA_SOPHIA' in str_upper_file_path):
+        if ('NANOPORE' in str_upper_file_path) or ('ILLUMINA' in str_upper_file_path and ('BRCA' in str_upper_file_path and not 'SOPHIA' in str_upper_file_path)):
             normalize_file_chromosome_names(file_path, verbose)
         index_file(file_path, verbose)
 
